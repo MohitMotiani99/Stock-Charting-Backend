@@ -1,0 +1,46 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  cloud:
+    gateway:
+      routes:
+        - id: COMPANY-SERVICE
+          uri: lb://COMPANY-SERVICE
+          predicates:
+            - Path=/companies/**
+        - id: STOCK-EXCHANGE-SERVICE
+          uri: lb://STOCK-EXCHANGE-SERVICE
+          predicates:
+            - Path=/exchanges/**
+        - id: STOCK-PRICE-SERVICE
+          uri: lb://STOCK-PRICE-SERVICE
+          predicates:
+            - Path=/prices/**
+        - id: SECTOR-SERVICE
+          uri: lb://SECTOR-SERVICE
+          predicates:
+            - Path=/sectors/**
+        - id: IPO-SERVICE
+          uri: lb://IPO-SERVICE
+          predicates:
+            - Path=/ipos/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registery: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      hostname: localhost

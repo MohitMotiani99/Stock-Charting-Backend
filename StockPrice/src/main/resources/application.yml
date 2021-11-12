@@ -1,0 +1,58 @@
+server:
+  port:
+    8086
+
+spring:
+  profiles:
+    active: dev_per
+  application:
+    name: STOCK-PRICE-SERVICE
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 215MB
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+
+file:
+  upload-dir: C:\Users\support\Downloads\StockCharting\StockPriceData
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registery: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      hostname: localhost
+
+---
+
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    password: pass@word1
+    url: jdbc:mysql://localhost:3306/stockdb
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+---
+
+spring:
+  profiles: dev_per
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    password: abcd
+    url: jdbc:mysql://localhost:3306/stockdb
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
