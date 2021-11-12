@@ -31,4 +31,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     }
 
+    @ExceptionHandler(SectorNotFoundException.class)
+    public ResponseEntity<ErrorMessage> sectorNotFoundExceptionHandler(SectorNotFoundException exception, WebRequest request){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(HttpStatus.NOT_FOUND,exception.getMessage()));
+    }
+
 }

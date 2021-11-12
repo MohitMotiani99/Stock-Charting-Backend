@@ -3,8 +3,10 @@ package com.StockCharting.StockPrice.controller;
 import com.StockCharting.StockPrice.dto.ChartResponse;
 import com.StockCharting.StockPrice.dto.StockPriceDTO;
 import com.StockCharting.StockPrice.exception.CompanyNotFoundException;
+import com.StockCharting.StockPrice.exception.SectorNotFoundException;
 import com.StockCharting.StockPrice.exception.StockExchangeNotFoundException;
 import com.StockCharting.StockPrice.service.StockPriceService;
+import com.StockCharting.StockPrice.service.StockPriceService2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ public class StockPriceController {
     @Autowired
     private StockPriceService stockPriceService;
 
+    @Autowired
+    private StockPriceService2 stockPriceService2;
+
     @PostMapping("/upload/{stockExchangeName}/{companyName}")
     public ResponseEntity<?> uploadPriceSheet(@RequestParam("file") MultipartFile file,@PathVariable("stockExchangeName") String stockExchangeName,@PathVariable("companyName") String companyName) throws IOException, StockExchangeNotFoundException, CompanyNotFoundException {
         List<StockPriceDTO> stockPriceDTOList = stockPriceService.uploadPriceSheet(file,stockExchangeName,companyName);
@@ -30,7 +35,7 @@ public class StockPriceController {
     }
 
     @GetMapping("/company/stock-variations/{stockExchangeName}/{companyCode}")
-    public ResponseEntity<?> getStockPricesOvertimeForACompany(@PathVariable("stockExchangeName") String stockExchangeName,@PathVariable("companyCode") String companyCode,@RequestParam String start,@RequestParam String end){
+    public ResponseEntity<?> getStockPricesOvertimeForACompany(@PathVariable("stockExchangeName") String stockExchangeName,@PathVariable("companyCode") String companyCode,@RequestParam String start,@RequestParam String end) throws StockExchangeNotFoundException, CompanyNotFoundException {
 
         ChartResponse chartResponse = stockPriceService.getStockPricesOvertimeForACompany(stockExchangeName,companyCode,start,end);
         return ResponseEntity.ok(chartResponse);
@@ -49,5 +54,10 @@ public class StockPriceController {
         return ResponseEntity.ok(chartResponse);
     }
 
+    @GetMapping("/sector/stock-variations/{sectorName}/{companyName}")
+    public ResponseEntity<?> getStockPricesOvertimeForStockExchange(@PathVariable("sectorName") String sectorName,@PathVariable("companyName") String companyName, @RequestParam String start, @RequestParam String end) throws CompanyNotFoundException, SectorNotFoundException {
+        ChartResponse chartResponse = stockPriceService.getStockPricesOvertimeForASector(sectorName,companyName,start,end);
+        return ResponseEntity.ok(chartResponse);
+    }
 
 }

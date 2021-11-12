@@ -1,5 +1,6 @@
 package com.StockCharting.Sector.service;
 
+import com.StockCharting.Sector.dto.CompanyDTO;
 import com.StockCharting.Sector.dto.SectorDTO;
 import com.StockCharting.Sector.entity.Sector;
 import com.StockCharting.Sector.exception.SectorAlreadyExistsException;
@@ -8,8 +9,11 @@ import com.StockCharting.Sector.mapper.SectorMapper;
 import com.StockCharting.Sector.repository.SectorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,6 +24,9 @@ public class SectorServiceImpl implements SectorService{
 
     @Autowired
     private SectorMapper sectorMapper;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public SectorDTO saveSector(SectorDTO sectorDTO) throws SectorAlreadyExistsException {
@@ -55,8 +62,13 @@ public class SectorServiceImpl implements SectorService{
 
         if(newFields.getSectorName()!=null){
             Optional<Sector> sectorOptional1 = sectorRepository.findBySectorNameIgnoreCase(newFields.getSectorName());
-            if(sectorOptional1.isPresent())
+            if(sectorOptional1.isPresent() && !sectorOptional1.get().getSectorId().equals(sectorId))
                 throw new SectorAlreadyExistsException("Sector with name "+newFields.getSectorName()+" Already Exists");
+
+            //List<CompanyDTO> companyDTOList = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://COMPANY-SERVICE/companies/", CompanyDTO[].class)));
+//            companyDTOList.stream()
+//                    .filter(companyDTO -> companyDTO.getSector().equals(sectorOptional.get().getSectorName()))
+//                    .forEach(companyDTO -> restTemplate.put("http://COMPANY-SERVICE/companies/update?companyId="+companyDTO.getCompanyId()));
         }
 
         Sector sector = sectorOptional.get();
