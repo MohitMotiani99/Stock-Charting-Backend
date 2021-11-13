@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -39,5 +40,15 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@RequestParam String userId) throws UserNotFoundException {
         userService.deleteUser(userId);
         return (ResponseEntity<?>) ResponseEntity.noContent();
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> getVerifiedUser(@RequestParam String username,@RequestParam String password) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getVerifiedUser(username,password));
     }
 }

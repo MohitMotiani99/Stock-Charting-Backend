@@ -8,7 +8,9 @@ import com.StockCharting.User.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -66,5 +68,21 @@ public class UserServiceImpl implements UserService{
             throw new UserNotFoundException("User Not Available");
 
         userRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> userMapper.map(user,UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDTO getVerifiedUser(String username, String password) throws UserNotFoundException {
+        Optional<User> userOptional = userRepository.findByUsernameAndPassword(username,password);
+        if(userOptional.isEmpty())
+            throw new UserNotFoundException("Incorrect Username or Password");
+        return userMapper.map(userOptional.get(),UserDTO.class);
     }
 }
