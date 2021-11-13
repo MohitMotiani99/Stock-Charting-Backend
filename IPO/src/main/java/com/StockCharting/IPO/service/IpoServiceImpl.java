@@ -30,7 +30,7 @@ public class IpoServiceImpl implements IpoService{
 
     @Override
     public IpoDTO saveIpo(IpoDTO ipoDTO) throws CompanyNotFoundException, StockExchangeNotFoundException {
-        if(!ipoDTO.getCompanyName().isEmpty()){
+        if(ipoDTO.getCompanyName()!=null && !ipoDTO.getCompanyName().isEmpty()){
             try {
                 CompanyDTO companyDTO = restTemplate.getForObject("http://localhost:8088/companies/searchByName="+ipoDTO.getCompanyName(),CompanyDTO.class);
             }
@@ -38,7 +38,9 @@ public class IpoServiceImpl implements IpoService{
                 throw new CompanyNotFoundException("Company "+ipoDTO.getCompanyName()+" Not Available");
             }
         }
-        if(!ipoDTO.getStockExchangeName().isEmpty()){
+        else
+            throw new CompanyNotFoundException("Company Name Cannot Be Empty");
+        if(ipoDTO.getStockExchangeName()!=null && !ipoDTO.getStockExchangeName().isEmpty()){
             try {
                 StockExchangeDTO stockExchangeDTO = restTemplate.getForObject("http://localhost:8087/exchanges/searchByName="+ipoDTO.getStockExchangeName(),StockExchangeDTO.class);
             }
@@ -46,6 +48,8 @@ public class IpoServiceImpl implements IpoService{
                 throw new StockExchangeNotFoundException("Stock Exchange "+ipoDTO.getStockExchangeName()+" Not Available");
             }
         }
+        else
+            throw new StockExchangeNotFoundException("Stock Exchange Name Cannot Be Empty");
 
         return ipoMapper.map(ipoRepository.save(ipoMapper.map(ipoDTO, Ipo.class)),IpoDTO.class);
     }

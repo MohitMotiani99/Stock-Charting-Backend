@@ -34,6 +34,8 @@ public class StockExchangeServiceImpl implements StockExchangeService{
             if(stockExchangeOptional.isPresent())
                 throw new StockExchangeAlreadyExistsException("Stock Exchange with name "+stockExchangeDTO.getStockExchangeName()+" Already Exits");
         }
+        else
+            throw new StockExchangeAlreadyExistsException("Stock Exchange Name Cannot Be Empty");
 
         StockExchange stockExchange = stockExchangeMapper.map(stockExchangeDTO,StockExchange.class);
         StockExchange savedStockExchange = stockExchangeRepository.save(stockExchange);
@@ -78,6 +80,9 @@ public class StockExchangeServiceImpl implements StockExchangeService{
             if(stockExchangeOptional.isPresent() && !stockExchangeOptional.get().getStockExchangeId().equals(stockExchangeId))
                 throw new StockExchangeAlreadyExistsException("Stock Exchange with name "+newFields.getStockExchangeName()+" Already Exits");
         }
+
+        if(newFields.getStockExchangeName()!=null && newFields.getStockExchangeName().isEmpty())
+            throw new StockExchangeNotFoundException("Stock Exchange Name Cannot Be Empty");
 
         found.setStockExchangeName(newFields.getStockExchangeName()==null? found.getStockExchangeName() : newFields.getStockExchangeName());
         found.setBrief(newFields.getBrief()==null? found.getBrief() : newFields.getBrief());

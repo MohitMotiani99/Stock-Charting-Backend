@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class IpoDTO {
     private String stockExchangeName;
     private Double pricePerShare;
     private Integer totalStocks;
-    private LocalDateTime openDateTime;
+    private LocalDate openDate;
     private String remarks;
 
 }

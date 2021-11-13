@@ -12,6 +12,8 @@ public class UserMapper extends ConfigurableMapper {
     protected void configure(MapperFactory factory) {
         factory.registerClassMap(factory.classMap(User.class, UserDTO.class)
                 .fieldAToB("userId","userId")
+                .fieldAToB("userType","userType")
+                .fieldAToB("confirmed","confirmed")
                 .byDefault());
     }
 }

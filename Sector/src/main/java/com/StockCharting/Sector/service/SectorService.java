@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SectorService {
 
-    SectorDTO saveSector(SectorDTO sectorDTO) throws SectorAlreadyExistsException;
+    SectorDTO saveSector(SectorDTO sectorDTO) throws SectorAlreadyExistsException, SectorNotFoundException;
 
     SectorDTO findSectorByName(String sectorName) throws SectorNotFoundException;
 

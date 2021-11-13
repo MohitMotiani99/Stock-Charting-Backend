@@ -2,12 +2,14 @@ package com.StockCharting.User.service;
 
 import com.StockCharting.User.dto.UserDTO;
 import com.StockCharting.User.entity.User;
+import com.StockCharting.User.exception.UserAlreadyExistsException;
 import com.StockCharting.User.exception.UserNotFoundException;
 import com.StockCharting.User.mapper.UserMapper;
 import com.StockCharting.User.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +24,14 @@ public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
 
     @Override
-    public UserDTO saveUser(UserDTO userDTO) {
+    public UserDTO saveUser(UserDTO userDTO) throws UserAlreadyExistsException, UserNotFoundException {
+        if(userDTO.getUsername()==null || userDTO.getUsername().isEmpty())
+            throw new UserAlreadyExistsException("User Name Cannot Be Empty");
+        if(userDTO.getPassword()==null || userDTO.getPassword().isEmpty())
+            throw new UserNotFoundException("Password Cannot Be Empty");
+        Optional<User> userOptional = userRepository.findByUsername(userDTO.getUsername());
+        if(userOptional.isPresent())
+            throw new UserAlreadyExistsException("User with username "+userDTO.getUsername()+" Already Exists");
         return userMapper.map(userRepository.save(userMapper.map(userDTO, User.class)),UserDTO.class);
     }
 
@@ -37,16 +46,25 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO findUserByName(String username) throws UserNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if(userOptional.isEmpty())
+        if(userOptional.isEmpty() || username.equals("admin"))
             throw new UserNotFoundException("User Not Available");
         return userMapper.map(userOptional.get(),UserDTO.class);
     }
 
     @Override
-    public UserDTO updateUser(String userId, UserDTO newFields) throws UserNotFoundException {
+    public UserDTO updateUser(String userId, UserDTO newFields) throws UserNotFoundException, UserAlreadyExistsException {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if(userOptional.isEmpty())
             throw new UserNotFoundException("User Not Available");
+
+        if(newFields.getUsername()==null || newFields.getUsername().isEmpty())
+            throw new UserAlreadyExistsException("User Name Cannot Be Empty");
+        if(newFields.getPassword()==null || newFields.getPassword().isEmpty())
+            throw new UserNotFoundException("Password Cannot Be Empty");
+
+        Optional<User> userOptional1 = userRepository.findByUsername(newFields.getUsername());
+        if(userOptional1.isPresent() && !userOptional1.get().getUserId().equals(userId))
+            throw new UserAlreadyExistsException("User with username "+newFields.getUsername()+" Already Exists");
 
         User user = userOptional.get();
 
@@ -66,14 +84,14 @@ public class UserServiceImpl implements UserService{
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if(userOptional.isEmpty())
             throw new UserNotFoundException("User Not Available");
-
-        userRepository.deleteByUserId(userId);
+        userRepository.delete(userOptional.get());
     }
 
     @Override
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
+                .filter(user -> user.getUserType().equals("user"))
                 .map(user -> userMapper.map(user,UserDTO.class))
                 .collect(Collectors.toList());
     }

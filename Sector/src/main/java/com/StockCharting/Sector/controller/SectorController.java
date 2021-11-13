@@ -17,7 +17,7 @@ public class SectorController {
     private SectorService sectorService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveSector(@RequestBody SectorDTO sectorDTO) throws SectorAlreadyExistsException {
+    public ResponseEntity<?> saveSector(@RequestBody SectorDTO sectorDTO) throws SectorAlreadyExistsException, SectorNotFoundException {
         return ResponseEntity.ok(sectorService.saveSector(sectorDTO));
     }
 

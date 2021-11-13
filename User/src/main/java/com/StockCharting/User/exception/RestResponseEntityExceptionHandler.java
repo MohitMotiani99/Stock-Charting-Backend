@@ -19,4 +19,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .body(new ErrorMessage(HttpStatus.NOT_FOUND,exception.getMessage()));
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorMessage> userAlreadyExistsExceptionHandler(UserAlreadyExistsException exception, WebRequest request){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorMessage(HttpStatus.NOT_FOUND,exception.getMessage()));
+    }
+
 }

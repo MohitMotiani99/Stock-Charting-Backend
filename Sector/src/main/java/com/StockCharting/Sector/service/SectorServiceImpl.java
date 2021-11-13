@@ -29,12 +29,18 @@ public class SectorServiceImpl implements SectorService{
     private RestTemplate restTemplate;
 
     @Override
-    public SectorDTO saveSector(SectorDTO sectorDTO) throws SectorAlreadyExistsException {
+    public SectorDTO saveSector(SectorDTO sectorDTO) throws SectorAlreadyExistsException, SectorNotFoundException {
         if(sectorDTO.getSectorName()!=null){
             Optional<Sector> sectorOptional = sectorRepository.findBySectorNameIgnoreCase(sectorDTO.getSectorName());
             if(sectorOptional.isPresent())
                 throw new SectorAlreadyExistsException("Sector with name "+sectorDTO.getSectorName()+" Already Exists");
         }
+        else
+            throw new SectorAlreadyExistsException("Sector Name Cannot Be Empty");
+
+        if(sectorDTO.getSectorName()!=null && sectorDTO.getSectorName().isEmpty())
+            throw new SectorNotFoundException("Sector Name Cannot Be Empty");
+
         return sectorMapper.map(sectorRepository.save(sectorMapper.map(sectorDTO, Sector.class)),SectorDTO.class);
     }
 
@@ -70,6 +76,9 @@ public class SectorServiceImpl implements SectorService{
 //                    .filter(companyDTO -> companyDTO.getSector().equals(sectorOptional.get().getSectorName()))
 //                    .forEach(companyDTO -> restTemplate.put("http://COMPANY-SERVICE/companies/update?companyId="+companyDTO.getCompanyId()));
         }
+
+        if(newFields.getSectorName()!=null && newFields.getSectorName().isEmpty())
+            throw new SectorNotFoundException("Sector Name Cannot Be Empty");
 
         Sector sector = sectorOptional.get();
 

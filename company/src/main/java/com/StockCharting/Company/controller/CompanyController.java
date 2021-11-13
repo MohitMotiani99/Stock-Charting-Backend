@@ -24,7 +24,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveCompany(@RequestBody CompanyDTO companyDTO) throws StockExchangeNotFoundException, SectorNotFoundException, CompanyAlreadyExistsException {
+    public ResponseEntity<?> saveCompany(@RequestBody CompanyDTO companyDTO) throws StockExchangeNotFoundException, SectorNotFoundException, CompanyAlreadyExistsException, CompanyNotFoundException {
         log.info("Inside saveCompany of CompanyController");
         return ResponseEntity.ok(companyService.saveCompany(companyDTO));
     }

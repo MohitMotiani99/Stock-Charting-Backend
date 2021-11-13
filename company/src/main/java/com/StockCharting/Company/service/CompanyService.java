@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface CompanyService {
 
-    CompanyDTO saveCompany(CompanyDTO company) throws StockExchangeNotFoundException, SectorNotFoundException, CompanyAlreadyExistsException;
+    CompanyDTO saveCompany(CompanyDTO company) throws StockExchangeNotFoundException, SectorNotFoundException, CompanyAlreadyExistsException, CompanyNotFoundException;
 
     CompanyDTO findCompanyById(String companyId) throws CompanyNotFoundException;
 

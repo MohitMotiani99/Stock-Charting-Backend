@@ -1,8 +1,10 @@
 package com.StockCharting.User.controller;
 
 import com.StockCharting.User.dto.UserDTO;
+import com.StockCharting.User.exception.UserAlreadyExistsException;
 import com.StockCharting.User.exception.UserNotFoundException;
 import com.StockCharting.User.service.UserService;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ public class UserController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) throws UserAlreadyExistsException, UserNotFoundException {
         return ResponseEntity.ok(userService.saveUser(userDTO));
     }
 
@@ -32,14 +34,14 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestParam String userId,@RequestBody UserDTO newFields) throws UserNotFoundException {
+    public ResponseEntity<?> updateUser(@RequestParam String userId,@RequestBody UserDTO newFields) throws UserNotFoundException, UserAlreadyExistsException {
         return ResponseEntity.ok(userService.updateUser(userId,newFields));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestParam String userId) throws UserNotFoundException {
+    public ResponseEntity<String> deleteUser(@RequestParam String userId) throws UserNotFoundException {
         userService.deleteUser(userId);
-        return (ResponseEntity<?>) ResponseEntity.noContent();
+        return ResponseEntity.status(HttpStatus.SC_NO_CONTENT).body("User "+userId+" Deleted");
     }
 
     @GetMapping("/")

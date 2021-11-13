@@ -38,14 +38,16 @@ public class CompanyServiceImpl implements CompanyService{
     private RestTemplate restTemplate;
 
     @Override
-    public CompanyDTO saveCompany(CompanyDTO companyDTO) throws StockExchangeNotFoundException, SectorNotFoundException, CompanyAlreadyExistsException {
+    public CompanyDTO saveCompany(CompanyDTO companyDTO) throws StockExchangeNotFoundException, SectorNotFoundException, CompanyAlreadyExistsException, CompanyNotFoundException {
         log.info("Inside saveCompany of CompanyServiceImpl");
 
-        if(companyDTO.getCompanyName()!=null){
+        if(companyDTO.getCompanyName()!=null && !companyDTO.getCompanyName().isEmpty()){
             Optional<Company> companyOptional = companyRepository.findByCompanyNameIgnoreCase(companyDTO.getCompanyName());
             if(companyOptional.isPresent())
                 throw new CompanyAlreadyExistsException("Company with name "+companyDTO.getCompanyName()+" Already Exists");
         }
+        else
+            throw new CompanyNotFoundException("Company Name Cannot Be Empty");
 
         if (companyDTO.getSector()!=null && !companyDTO.getSector().isEmpty()){
             try{
@@ -99,7 +101,10 @@ public class CompanyServiceImpl implements CompanyService{
                 throw new CompanyAlreadyExistsException("Company with name "+newFields.getCompanyName()+" Already Exists");
         }
 
-        if (newFields.getSector()!=null){
+        if(newFields.getCompanyName() != null && newFields.getCompanyName().isEmpty())
+            throw new CompanyNotFoundException("Company Name Cannot Be Empty");
+
+        if (newFields.getSector()!=null && newFields.getSector()!=null){
             try{
                 SectorDTO sectorDTO = restTemplate.getForObject("http://SECTOR-SERVICE/sectors/searchByName?sectorName="+newFields.getSector(),SectorDTO.class);
             }

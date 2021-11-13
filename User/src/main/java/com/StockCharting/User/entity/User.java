@@ -23,10 +23,10 @@ public class User {
     private String userId = UUID.randomUUID().toString();
     private String username;
     private String password;
-    private String userType;
+    private String userType = "user";
     private String email;
     private String mobile;
-    private Boolean confirmed;
+    private Boolean confirmed =true;
 
 
 }
