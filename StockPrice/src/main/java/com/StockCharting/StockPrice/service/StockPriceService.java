@@ -3,6 +3,7 @@ package com.StockCharting.StockPrice.service;
 import com.StockCharting.StockPrice.dto.ChartResponse;
 import com.StockCharting.StockPrice.dto.StockPriceDTO;
 import com.StockCharting.StockPrice.exception.CompanyNotFoundException;
+import com.StockCharting.StockPrice.exception.FieldNotFoundException;
 import com.StockCharting.StockPrice.exception.SectorNotFoundException;
 import com.StockCharting.StockPrice.exception.StockExchangeNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,4 +21,6 @@ public interface StockPriceService {
     ChartResponse getStockPricesOvertimeForStockExchange(String stockExchangeName, String start, String end) throws StockExchangeNotFoundException;
 
     ChartResponse getStockPricesOvertimeForASector(String sectorName, String companyName, String start, String end) throws CompanyNotFoundException, SectorNotFoundException;
+
+    StockPriceDTO saveStockPrice(StockPriceDTO stockPriceDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException;
 }

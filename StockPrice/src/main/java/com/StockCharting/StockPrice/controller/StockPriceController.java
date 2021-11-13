@@ -3,6 +3,7 @@ package com.StockCharting.StockPrice.controller;
 import com.StockCharting.StockPrice.dto.ChartResponse;
 import com.StockCharting.StockPrice.dto.StockPriceDTO;
 import com.StockCharting.StockPrice.exception.CompanyNotFoundException;
+import com.StockCharting.StockPrice.exception.FieldNotFoundException;
 import com.StockCharting.StockPrice.exception.SectorNotFoundException;
 import com.StockCharting.StockPrice.exception.StockExchangeNotFoundException;
 import com.StockCharting.StockPrice.service.StockPriceService;
@@ -58,6 +59,11 @@ public class StockPriceController {
     public ResponseEntity<?> getStockPricesOvertimeForStockExchange(@PathVariable("sectorName") String sectorName,@PathVariable("companyName") String companyName, @RequestParam String start, @RequestParam String end) throws CompanyNotFoundException, SectorNotFoundException {
         ChartResponse chartResponse = stockPriceService.getStockPricesOvertimeForASector(sectorName,companyName,start,end);
         return ResponseEntity.ok(chartResponse);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveStockPrice(@RequestBody StockPriceDTO stockPriceDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException {
+        return ResponseEntity.ok(stockPriceService.saveStockPrice(stockPriceDTO));
     }
 
 }

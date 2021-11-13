@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -26,7 +26,7 @@ public class Ipo {
     private String stockExchangeName;
     private Double pricePerShare;
     private Integer totalStocks;
-    private LocalDateTime openDateTime;
+    private LocalDate openDate;
     private String remarks;
 
 }

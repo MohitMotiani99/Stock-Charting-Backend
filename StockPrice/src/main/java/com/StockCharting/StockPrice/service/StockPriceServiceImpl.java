@@ -3,6 +3,7 @@ package com.StockCharting.StockPrice.service;
 import com.StockCharting.StockPrice.dto.*;
 import com.StockCharting.StockPrice.entity.StockPrice;
 import com.StockCharting.StockPrice.exception.CompanyNotFoundException;
+import com.StockCharting.StockPrice.exception.FieldNotFoundException;
 import com.StockCharting.StockPrice.exception.SectorNotFoundException;
 import com.StockCharting.StockPrice.exception.StockExchangeNotFoundException;
 import com.StockCharting.StockPrice.mapper.StockPriceMapper;
@@ -15,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -599,6 +601,25 @@ public class StockPriceServiceImpl implements StockPriceService{
 
 
         return chartResponse;
+    }
+
+    @Override
+    public StockPriceDTO saveStockPrice(StockPriceDTO stockPriceDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException {
+        String stockExchangeName = stockPriceDTO.getStockExchangeName();
+        String companyCode = stockPriceDTO.getCompanyCode();
+        Double price = stockPriceDTO.getPrice();
+        LocalDate localDate = stockPriceDTO.getLocalDate();
+
+        if(stockExchangeName==null || stockExchangeName.length()==0)
+            throw new StockExchangeNotFoundException("Empty Stock Exchange Field");
+        if(companyCode==null || companyCode.length()==0)
+            throw new CompanyNotFoundException("Empty Company Name Field");
+        if(price==null)
+            throw new FieldNotFoundException("Empty Price Field");
+        if(localDate==null)
+            throw new FieldNotFoundException("Empty Date Field");
+
+        return stockPriceMapper.map(stockPriceRepository.save(stockPriceMapper.map(stockPriceDTO,StockPrice.class)),StockPriceDTO.class);
     }
 
 }

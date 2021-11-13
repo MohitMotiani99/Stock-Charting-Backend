@@ -36,4 +36,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(HttpStatus.NOT_FOUND,exception.getMessage()));
     }
 
+    @ExceptionHandler(FieldNotFoundException.class)
+    public ResponseEntity<ErrorMessage> fieldNotFoundExceptionHandler(FieldNotFoundException exception, WebRequest request){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(HttpStatus.NOT_FOUND,exception.getMessage()));
+    }
+
 }

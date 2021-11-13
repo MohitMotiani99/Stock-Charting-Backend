@@ -2,6 +2,7 @@ package com.StockCharting.IPO.controller;
 
 import com.StockCharting.IPO.dto.IpoDTO;
 import com.StockCharting.IPO.exception.CompanyNotFoundException;
+import com.StockCharting.IPO.exception.FieldNotFoundException;
 import com.StockCharting.IPO.exception.IpoNotFoundException;
 import com.StockCharting.IPO.exception.StockExchangeNotFoundException;
 import com.StockCharting.IPO.service.IpoService;
@@ -17,7 +18,7 @@ public class IpoController {
     private IpoService ipoService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveIpo(@RequestBody IpoDTO ipoDTO) throws CompanyNotFoundException, StockExchangeNotFoundException {
+    public ResponseEntity<?> saveIpo(@RequestBody IpoDTO ipoDTO) throws CompanyNotFoundException, StockExchangeNotFoundException, FieldNotFoundException {
         return ResponseEntity.ok(ipoService.saveIpo(ipoDTO));
     }
 
@@ -27,7 +28,7 @@ public class IpoController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateIpo(@RequestParam String ipoId,@RequestBody IpoDTO newFields) throws IpoNotFoundException, CompanyNotFoundException, StockExchangeNotFoundException {
+    public ResponseEntity<?> updateIpo(@RequestParam String ipoId,@RequestBody IpoDTO newFields) throws IpoNotFoundException, CompanyNotFoundException, StockExchangeNotFoundException, FieldNotFoundException {
         return ResponseEntity.ok(ipoService.updateIpo(ipoId,newFields));
     }
 
@@ -36,5 +37,17 @@ public class IpoController {
         ipoService.deleteIpo(ipoId);
         return (ResponseEntity<?>) ResponseEntity.noContent();
     }
+
+    @GetMapping("/searchByAttrNames")
+    public ResponseEntity<?> getIpoByAttrNames(@RequestParam String stockExchangeName,@RequestParam String companyName){
+        return ResponseEntity.ok(ipoService.getIpoByAttrNames(stockExchangeName,companyName));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getAllIpos(){
+        return ResponseEntity.ok(ipoService.getAllIpos());
+    }
+
+
 
 }
