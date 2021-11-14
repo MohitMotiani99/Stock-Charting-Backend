@@ -133,6 +133,7 @@ public class IpoServiceImpl implements IpoService{
 
     @Override
     public List<IpoDTO> getIpoByAttrNames(String stockExchangeName, String companyName) {
+        System.out.println("hey");
         return ipoRepository.findByStockExchangeNameAndCompanyName(stockExchangeName,companyName)
                 .stream()
                 .map(ipo -> ipoMapper.map(ipo,IpoDTO.class))

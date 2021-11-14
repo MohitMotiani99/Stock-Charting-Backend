@@ -304,64 +304,64 @@ public class StockPriceServiceImpl implements StockPriceService{
         return chartResponse;
     }
 
-    public ChartResponse getStockPricesOvertimeForSector(String sectorName,String start,String end) {
-        List<CompanyDTO> companyDTOList = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://localhost:8088/companies/", CompanyDTO[].class)));
-        Set<String> companySet = companyDTOList.stream().map(CompanyDTO::getCompanyName).collect(Collectors.toSet());
-
-        LocalDate startDate=LocalDate.parse(getDate(start));
-        LocalDate endDate=LocalDate.parse(getDate(end));
-
-        List<StockSeries1> stockSeries1List = stockPriceRepository.findAll()
-                .stream()
-                .filter(stockPrice -> {
-                    List<CompanyDTO> companyDTOList1 = companyDTOList
-                                                        .stream()
-                                        .filter(companyDTO -> companyDTO.getStockExchangeCodes().containsKey(stockPrice.getStockExchangeName()) && companyDTO.getStockExchangeCodes().get(stockPrice.getStockExchangeName()).equals(stockPrice.getCompanyCode()))
-                                        .collect(Collectors.toList());
-                    assert companyDTOList1.size()==1;
-                    return companyDTOList1.get(0).getSector().equals(sectorName);
-                })
-                .map(stockPrice -> stockSeries1Mapper.map(stockPrice,StockSeries1.class))
-                .collect(Collectors.toList());
-
-        Map<LocalDate,List<StockSeries1>> map = stockSeries1List.stream().collect(Collectors.groupingBy(StockSeries1::getLocalDate));
-        List<StockSeries1> stockSeries1AnsList = new ArrayList<>();
-        for (LocalDate localDate:map.keySet()){
-            StockSeries1 stockSeries1 = new StockSeries1();
-            Double sum = 0.0;
-            for(StockSeries1 stockSeries11 : map.get(localDate))
-                sum+=stockSeries11.getPrice();
-            stockSeries1AnsList.add(new StockSeries1(sum/map.get(localDate).size(),localDate));
-        }
-
-        ChartResponse chartResponse = new ChartResponse();
-
-        chartResponse.setStockSeries1List(stockSeries1AnsList.stream()
-                .sorted((a,b)->{
-//                    System.out.println(a);
-//                    System.out.println(b);
-                    if(a.getLocalDate().isAfter(b.getLocalDate()))
-                        return 1;
-                    else if(a.getLocalDate().isBefore(b.getLocalDate()))
-                        return -1;
-                    return 0;
-                })
-                .filter(stockSeries1 -> stockSeries1.getLocalDate().isAfter(startDate) && stockSeries1.getLocalDate().isBefore(endDate))
-                .collect(Collectors.toList()));
-
-        double maxPrice=Double.MIN_VALUE,minPrice=Double.MAX_VALUE,growth,avgPrice,sum=0.0;
-        for(StockSeries1 stockSeries1:chartResponse.getStockSeries1List()){
-            maxPrice=Double.max(maxPrice,stockSeries1.getPrice());
-            minPrice=Double.max(minPrice,stockSeries1.getPrice());
-            sum+=stockSeries1.getPrice();
-        }
-        chartResponse.setMaxPrice(maxPrice);
-        chartResponse.setMinPrice(minPrice);
-        chartResponse.setAvgPrice(sum/chartResponse.getStockSeries1List().size());
-        chartResponse.setGrowth(chartResponse.getStockSeries1List().get(chartResponse.getStockSeries1List().size()-1).getPrice()-chartResponse.getStockSeries1List().get(0).getPrice());
-
-        return chartResponse;
-    }
+//    public ChartResponse getStockPricesOvertimeForSector(String sectorName,String start,String end) {
+//        List<CompanyDTO> companyDTOList = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://localhost:8088/companies/", CompanyDTO[].class)));
+//        Set<String> companySet = companyDTOList.stream().map(CompanyDTO::getCompanyName).collect(Collectors.toSet());
+//
+//        LocalDate startDate=LocalDate.parse(getDate(start));
+//        LocalDate endDate=LocalDate.parse(getDate(end));
+//
+//        List<StockSeries1> stockSeries1List = stockPriceRepository.findAll()
+//                .stream()
+//                .filter(stockPrice -> {
+//                    List<CompanyDTO> companyDTOList1 = companyDTOList
+//                                                        .stream()
+//                                        .filter(companyDTO -> companyDTO.getStockExchangeCodes().containsKey(stockPrice.getStockExchangeName()) && companyDTO.getStockExchangeCodes().get(stockPrice.getStockExchangeName()).equals(stockPrice.getCompanyCode()))
+//                                        .collect(Collectors.toList());
+//                    assert companyDTOList1.size()==1;
+//                    return companyDTOList1.get(0).getSector().equals(sectorName);
+//                })
+//                .map(stockPrice -> stockSeries1Mapper.map(stockPrice,StockSeries1.class))
+//                .collect(Collectors.toList());
+//
+//        Map<LocalDate,List<StockSeries1>> map = stockSeries1List.stream().collect(Collectors.groupingBy(StockSeries1::getLocalDate));
+//        List<StockSeries1> stockSeries1AnsList = new ArrayList<>();
+//        for (LocalDate localDate:map.keySet()){
+//            StockSeries1 stockSeries1 = new StockSeries1();
+//            Double sum = 0.0;
+//            for(StockSeries1 stockSeries11 : map.get(localDate))
+//                sum+=stockSeries11.getPrice();
+//            stockSeries1AnsList.add(new StockSeries1(sum/map.get(localDate).size(),localDate));
+//        }
+//
+//        ChartResponse chartResponse = new ChartResponse();
+//
+//        chartResponse.setStockSeries1List(stockSeries1AnsList.stream()
+//                .sorted((a,b)->{
+////                    System.out.println(a);
+////                    System.out.println(b);
+//                    if(a.getLocalDate().isAfter(b.getLocalDate()))
+//                        return 1;
+//                    else if(a.getLocalDate().isBefore(b.getLocalDate()))
+//                        return -1;
+//                    return 0;
+//                })
+//                .filter(stockSeries1 -> stockSeries1.getLocalDate().isAfter(startDate) && stockSeries1.getLocalDate().isBefore(endDate))
+//                .collect(Collectors.toList()));
+//
+//        double maxPrice=Double.MIN_VALUE,minPrice=Double.MAX_VALUE,growth,avgPrice,sum=0.0;
+//        for(StockSeries1 stockSeries1:chartResponse.getStockSeries1List()){
+//            maxPrice=Double.max(maxPrice,stockSeries1.getPrice());
+//            minPrice=Double.max(minPrice,stockSeries1.getPrice());
+//            sum+=stockSeries1.getPrice();
+//        }
+//        chartResponse.setMaxPrice(maxPrice);
+//        chartResponse.setMinPrice(minPrice);
+//        chartResponse.setAvgPrice(sum/chartResponse.getStockSeries1List().size());
+//        chartResponse.setGrowth(chartResponse.getStockSeries1List().get(chartResponse.getStockSeries1List().size()-1).getPrice()-chartResponse.getStockSeries1List().get(0).getPrice());
+//
+//        return chartResponse;
+//    }
 
     @Override
     public ChartResponse getStockPricesOvertimeForStockExchange(String stockExchangeName, String start, String end) throws StockExchangeNotFoundException {
@@ -479,7 +479,7 @@ public class StockPriceServiceImpl implements StockPriceService{
         return chartResponse;
     }
 
-    public ChartResponse getStockPricesOvertimeForASector(String sectorName, String companyName, String start, String end) throws CompanyNotFoundException, SectorNotFoundException {
+    public ChartResponse getStockPricesOvertimeForASector(String sectorName, String start, String end) throws CompanyNotFoundException, SectorNotFoundException {
         LocalDate startDate=LocalDate.parse(getDate(start));
         LocalDate endDate=LocalDate.parse(getDate(end));
 
@@ -489,18 +489,16 @@ public class StockPriceServiceImpl implements StockPriceService{
             throw new SectorNotFoundException("Sector "+sectorName+" Not Available");
         }
 
-        CompanyDTO companyDTO;
-        try{
-            companyDTO = restTemplate.getForObject("http://localhost:8088/companies/searchByName?companyName="+companyName, CompanyDTO.class);
-        } catch (HttpClientErrorException e){
-            throw new CompanyNotFoundException("Company with Name "+companyName+" Not Found");
-        }
+        List<CompanyDTO> companyDTOList = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://localhost:8088/companies/", CompanyDTO[].class)));
+
 
         List<StockSeries1> stockSeries1List = getALlStockPriceData()
                 .stream()
                 .filter(stockPrice -> {
-                    assert companyDTO != null;
-                    return companyDTO.getStockExchangeCodes().containsKey(stockPrice.getStockExchangeName()) && stockPrice.getLocalDate().isAfter(startDate) && stockPrice.getLocalDate().isBefore(endDate);
+                    return stockPrice.getLocalDate().isAfter(startDate) && stockPrice.getLocalDate().isBefore(endDate) &&
+                            companyDTOList.stream()
+                            .filter(companyDTO -> companyDTO.getSector().equals(sectorName) && companyDTO.getStockExchangeCodes().containsKey(stockPrice.getStockExchangeName()) && companyDTO.getStockExchangeCodes().get(stockPrice.getStockExchangeName()).equals(stockPrice.getCompanyCode()))
+                            .count()==1;
                 })
                 .map(stockPrice -> stockSeries1Mapper.map(stockPrice, StockSeries1.class))
                 .collect(Collectors.toList());
@@ -604,15 +602,32 @@ public class StockPriceServiceImpl implements StockPriceService{
     }
 
     @Override
-    public StockPriceDTO saveStockPrice(StockPriceDTO stockPriceDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException {
-        String stockExchangeName = stockPriceDTO.getStockExchangeName();
-        String companyCode = stockPriceDTO.getCompanyCode();
-        Double price = stockPriceDTO.getPrice();
-        LocalDate localDate = stockPriceDTO.getLocalDate();
+    public StockPriceDTO saveStockPrice(IpoDTO ipoDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException {
+        String stockExchangeName = ipoDTO.getStockExchangeName();
+        String companyName = ipoDTO.getCompanyName();
+        Double price = ipoDTO.getPricePerShare();
+        LocalDate localDate = ipoDTO.getOpenDate();
+
+        CompanyDTO companyDTO;
+        try{
+            companyDTO = restTemplate.getForObject("http://localhost:8088/companies/searchByName?companyName="+companyName,CompanyDTO.class);
+            if(companyDTO!=null && !companyDTO.getStockExchangeCodes().containsKey(stockExchangeName))
+                throw new StockExchangeNotFoundException("Stock Exchange with Name "+stockExchangeName+" Does Not Exist For this Company");
+        } catch (HttpClientErrorException e){
+            throw new CompanyNotFoundException("Company Name "+companyName+" Not Found");
+        }
+
+        assert companyDTO != null;
+        StockPriceDTO stockPriceDTO = StockPriceDTO.builder()
+                .stockExchangeName(stockExchangeName)
+                .companyCode(companyDTO.getStockExchangeCodes().get(stockExchangeName))
+                .price(price)
+                .localDate(localDate)
+                .build();
 
         if(stockExchangeName==null || stockExchangeName.length()==0)
             throw new StockExchangeNotFoundException("Empty Stock Exchange Field");
-        if(companyCode==null || companyCode.length()==0)
+        if(companyName==null || companyName.length()==0)
             throw new CompanyNotFoundException("Empty Company Name Field");
         if(price==null)
             throw new FieldNotFoundException("Empty Price Field");

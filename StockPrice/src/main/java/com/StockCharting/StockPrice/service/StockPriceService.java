@@ -1,6 +1,7 @@
 package com.StockCharting.StockPrice.service;
 
 import com.StockCharting.StockPrice.dto.ChartResponse;
+import com.StockCharting.StockPrice.dto.IpoDTO;
 import com.StockCharting.StockPrice.dto.StockPriceDTO;
 import com.StockCharting.StockPrice.exception.CompanyNotFoundException;
 import com.StockCharting.StockPrice.exception.FieldNotFoundException;
@@ -16,11 +17,11 @@ public interface StockPriceService {
 
     ChartResponse getStockPricesOvertimeForACompany(String stockExchangeName, String companyCode, String start, String end) throws StockExchangeNotFoundException, CompanyNotFoundException;
 
-    ChartResponse getStockPricesOvertimeForSector(String sectorName,String start,String end);
+//    ChartResponse getStockPricesOvertimeForSector(String sectorName,String start,String end);
 
     ChartResponse getStockPricesOvertimeForStockExchange(String stockExchangeName, String start, String end) throws StockExchangeNotFoundException;
 
-    ChartResponse getStockPricesOvertimeForASector(String sectorName, String companyName, String start, String end) throws CompanyNotFoundException, SectorNotFoundException;
+    ChartResponse getStockPricesOvertimeForASector(String sectorName, String start, String end) throws CompanyNotFoundException, SectorNotFoundException;
 
-    StockPriceDTO saveStockPrice(StockPriceDTO stockPriceDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException;
+    StockPriceDTO saveStockPrice(IpoDTO ipoDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException;
 }

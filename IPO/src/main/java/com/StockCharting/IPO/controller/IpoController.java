@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ipos")
+@CrossOrigin
 public class IpoController {
 
     @Autowired

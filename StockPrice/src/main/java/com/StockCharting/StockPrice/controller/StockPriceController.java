@@ -1,6 +1,7 @@
 package com.StockCharting.StockPrice.controller;
 
 import com.StockCharting.StockPrice.dto.ChartResponse;
+import com.StockCharting.StockPrice.dto.IpoDTO;
 import com.StockCharting.StockPrice.dto.StockPriceDTO;
 import com.StockCharting.StockPrice.exception.CompanyNotFoundException;
 import com.StockCharting.StockPrice.exception.FieldNotFoundException;
@@ -42,12 +43,7 @@ public class StockPriceController {
         return ResponseEntity.ok(chartResponse);
     }
 
-    @GetMapping("/company/stock-variations/{sectorName}")
-    public ResponseEntity<?> getStockPricesOvertimeForSector(@PathVariable("sectorName") String sectorName, @RequestParam String start, @RequestParam String end){
 
-        ChartResponse chartResponse = stockPriceService.getStockPricesOvertimeForSector(sectorName,start,end);
-        return ResponseEntity.ok(chartResponse);
-    }
 
     @GetMapping("/stock-exchange/stock-variations/{stockExchangeName}")
     public ResponseEntity<?> getStockPricesOvertimeForStockExchange(@PathVariable("stockExchangeName") String stockExchangeName, @RequestParam String start, @RequestParam String end) throws StockExchangeNotFoundException {
@@ -55,15 +51,15 @@ public class StockPriceController {
         return ResponseEntity.ok(chartResponse);
     }
 
-    @GetMapping("/sector/stock-variations/{sectorName}/{companyName}")
-    public ResponseEntity<?> getStockPricesOvertimeForStockExchange(@PathVariable("sectorName") String sectorName,@PathVariable("companyName") String companyName, @RequestParam String start, @RequestParam String end) throws CompanyNotFoundException, SectorNotFoundException {
-        ChartResponse chartResponse = stockPriceService.getStockPricesOvertimeForASector(sectorName,companyName,start,end);
+    @GetMapping("/sector/stock-variations/{sectorName}")
+    public ResponseEntity<?> getStockPricesOvertimeForASector(@PathVariable("sectorName") String sectorName, @RequestParam String start, @RequestParam String end) throws CompanyNotFoundException, SectorNotFoundException {
+        ChartResponse chartResponse = stockPriceService.getStockPricesOvertimeForASector(sectorName,start,end);
         return ResponseEntity.ok(chartResponse);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveStockPrice(@RequestBody StockPriceDTO stockPriceDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException {
-        return ResponseEntity.ok(stockPriceService.saveStockPrice(stockPriceDTO));
+    public ResponseEntity<?> saveStockPrice(@RequestBody IpoDTO ipoDTO) throws StockExchangeNotFoundException, CompanyNotFoundException, FieldNotFoundException {
+        return ResponseEntity.ok(stockPriceService.saveStockPrice(ipoDTO));
     }
 
 }

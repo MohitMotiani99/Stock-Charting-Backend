@@ -1,7 +1,6 @@
 package com.StockCharting.StockPrice.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,13 +9,14 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class StockPriceDTO {
+public class IpoDTO {
 
-    private String stockPriceId;
+    private String ipoId ;
+    private String companyName;
     private String stockExchangeName;
-    private String companyCode;
-    private Double price;
-    private LocalDate localDate;
+    private Double pricePerShare;
+    private Integer totalStocks;
+    private LocalDate openDate;
+    private String remarks;
 
 }
