@@ -77,6 +77,7 @@ public class SectorServiceImpl implements SectorService{
 //                    .forEach(companyDTO -> restTemplate.put("http://COMPANY-SERVICE/companies/update?companyId="+companyDTO.getCompanyId()));
         }
 
+
         if(newFields.getSectorName()!=null && newFields.getSectorName().isEmpty())
             throw new SectorNotFoundException("Sector Name Cannot Be Empty");
 
@@ -85,7 +86,7 @@ public class SectorServiceImpl implements SectorService{
         sector.setSectorName(newFields.getSectorName()==null?sector.getSectorName(): newFields.getSectorName());
         sector.setBrief(newFields.getBrief()==null?sector.getBrief(): newFields.getBrief());
 
-        return sectorMapper.map(sector,SectorDTO.class);
+        return sectorMapper.map(sectorRepository.save(sector),SectorDTO.class);
 
     }
 

@@ -63,6 +63,7 @@ public class CompanyServiceImpl implements CompanyService{
                 try {
                     StockExchangeDTO stockExchangeDTO = restTemplate.getForObject("http://STOCK-EXCHANGE-SERVICE/exchanges/searchByName?stockExchangeName=" + stockName, StockExchangeDTO.class);
                 } catch (HttpClientErrorException exception) {
+                    System.out.println("hey");
                     throw new StockExchangeNotFoundException("Stock Exchange "+stockName+" Not Available");
                 }
             }

@@ -4,7 +4,7 @@ server:
 
 spring:
   profiles:
-    active: dev_per
+    active: dev_mongo
   application:
     name: STOCK-EXCHANGE-SERVICE
 
@@ -44,3 +44,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+---
+
+spring:
+  profiles: dev_mongo
+  data:
+    mongodb:
+      uri: mongodb+srv://mohit:abcd@cluster0.lre69.mongodb.net/stockmdb
+      database: stockmdb
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
