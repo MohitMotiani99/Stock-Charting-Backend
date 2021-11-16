@@ -1,72 +1,79 @@
-//package com.StockCharting.Company.controller;
-//
-//import com.StockCharting.Company.entity.Company;
-//import com.StockCharting.Company.exception.CompanyIdNotFoundException;
-//import com.StockCharting.Company.service.CompanyService;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.web.servlet.MockMvc;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//
-//@WebMvcTest(CompanyController.class)
-//class CompanyControllerTest {
-//
-//    @Autowired
-//    private MockMvc mockMvc;
-//
-//    @MockBean
-//    private CompanyService companyService;
-//
-//    private Company company;
-//
-//    @BeforeEach
-//    void setUp() {
-//        company = Company.builder()
-//                .id(1L)
-//                .companyName("Telstra")
-//                .ceo("Andy Penn")
-//                .listedInStockExchange(false)
-//                .build();
-//    }
-//
-//    @Test
-//    @DisplayName("Save New Company")
-//    public void saveCompany_thenReturnCompany() throws Exception {
-//        Company company = Company.builder()
-//                .companyName("Amazon")
-//                .turnover(36000L)
-//                .ceo("Bezos")
-//                .listedInStockExchange(false)
-//                .build();
-//
-//        Mockito.when(companyService.saveCompany(company))
-//                .thenReturn(company);
-//
-//        mockMvc.perform(post("/companies/save")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content("{\n" +
-//                        "\t\"companyName\":\"Amazon\",\n" +
-//                        "    \"turnover\":36000,\n" +
-//                        "    \"ceo\":\"Bezos\",\n" +
-//                        "    \"listedInStockExchange\":false\n" +
-//                        "}"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.companyName").value("Amazon"));
-//
-//    }
-//
+package com.StockCharting.Company.controller;
+
+import com.StockCharting.Company.dto.CompanyDTO;
+import com.StockCharting.Company.entity.Company;
+import com.StockCharting.Company.exception.CompanyNotFoundException;
+import com.StockCharting.Company.service.CompanyService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(CompanyController.class)
+class CompanyControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private CompanyService companyService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private CompanyDTO companyDTO;
+
+    @BeforeEach
+    void setUp() {
+        companyDTO = CompanyDTO.builder()
+                .companyId("1")
+                .companyName("Telstra")
+                .ceo("Andy Penn")
+                .turnover(null)
+                .boardOfDirectors(null)
+                .brief(null)
+                .listedInStockExchange(false)
+                .stockExchangeCodes(null)
+                .build();
+    }
+
+    @Test
+    @DisplayName("Save New Company")
+    public void saveCompanyDTO_thenReturnCompanyDTO() throws Exception {
+        CompanyDTO companyDTO2 = CompanyDTO.builder()
+                .companyName("Telstra")
+                .ceo("Andy Penn")
+                .listedInStockExchange(false)
+                .build();
+
+        Mockito.when(companyService.saveCompany(companyDTO2))
+                .thenReturn(companyDTO);
+
+        mockMvc.perform(post("/companies/save")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(companyDTO2)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.companyName").value("Telstra"))
+                .andExpect(jsonPath("$.ceo").value("Andy Penn"))
+                .andExpect(jsonPath("$.listedInStockExchange").value(false));
+
+    }
+
 //    @Test
 //    @DisplayName("Find Company By Id with a Valid Company Id")
 //    public void findCompanyById_whenValidId_thenCompanyFound() throws Exception {
@@ -217,5 +224,5 @@
 //
 //
 //    }
-//
-//}
+
+}
