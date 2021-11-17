@@ -8,34 +8,36 @@ Microservices include:-
 
 - Service Registery
 
--Companies
+- Companies
 
--Stock Exchanges
+- Stock Exchanges
 
--Sectors
+- Sectors
 
--Users
+- Users
 
--IPOs
+- IPOs
 
--Stock Price (for all the charting related APIs)
+- Stock Price (for all the charting related APIs)
 
--API Gateway
-
-
+- API Gateway
 
 
 
 
--Start service Registery first
+BASIC STEPS:--
 
--And then all other services
 
--API gateway is also present
 
--6 Microservices + Service registery + API gateway
+- Start service Registery first
 
--MongoDB Atlas Used with Hibernate
+- And then all other services
+
+- API gateway is also present
+
+- 6 Microservices + Service registery + API gateway
+
+- MongoDB Atlas Used with Hibernate
 
 
 Frontend for the application(ReactJS & Redux):    
