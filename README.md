@@ -2,6 +2,30 @@
 
 Backend for the Stock Market Charting Case Study:-
 
+Made in Java Spring Boot in Microservice MVC Architectures including packages(entity/document,controller,service,dto,exception & repository for all the Microservices)
+
+Microservices include:-
+
+- Service Registery
+
+-Companies
+
+-Stock Exchanges
+
+-Sectors
+
+-Users
+
+-IPOs
+
+-Stock Price (for all the charting related APIs)
+
+-API Gateway
+
+
+
+
+
 
 -Start service Registery first
 
