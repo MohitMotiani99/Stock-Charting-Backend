@@ -2,11 +2,17 @@
 
 Backend for the Stock Market Charting Case Study:-
 
+
 -Start service Registery first
+
 -And then all other services
+
 -API gateway is also present
+
 -6 Microservices + Service registery + API gateway
+
 -MongoDB Atlas Used with Hibernate
+
 
 Frontend for the application(ReactJS & Redux):    
 
