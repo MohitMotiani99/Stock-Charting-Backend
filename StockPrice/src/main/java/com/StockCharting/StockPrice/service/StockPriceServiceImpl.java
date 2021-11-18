@@ -35,7 +35,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class StockPriceServiceImpl implements StockPriceService{
-    public final String UPLOAD_DIR="C:\\Users\\support\\Downloads\\StockCharting\\StockPriceData";
+
+    public final String UPLOAD_DIR=  "C:\\Users\\support\\Downloads\\StockCharting\\StockPrice\\src\\main\\resources\\static\\StockPriceData";
+
+
 
     @Autowired
     private StockPriceRepository stockPriceRepository;
